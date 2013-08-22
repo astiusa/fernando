@@ -1,0 +1,15 @@
+{
+  "name": "ircbot",
+  "version": "0.0.1",
+  "author": "Gregg <gregg.thomason@asti-usa.com>",
+  "description": "IRCBOT",
+  "dependencies": {
+    "colors": "*",
+    "irc": "*",
+    "commander": "~2.0.0"
+  },
+  "license": "",
+  "engines": {
+    "node": ">=0.6"
+  }
+}
