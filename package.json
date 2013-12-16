@@ -1,9 +1,10 @@
 {
   "name": "ircbot",
   "version": "0.0.1",
-  "description": "The ASTi irc bit.",
+  "description": "The ASTi irc bot.",
   "main": "bot.js",
   "scripts": {
+    "start": "node bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,5 +18,9 @@
   "license": "Apache v2",
   "bugs": {
     "url": "https://github.com/astiusa/fernando/issues"
+  },
+  "dependencies": {
+    "commander": "~2.0.0",
+    "irc": "~0.3.6"
   }
 }
