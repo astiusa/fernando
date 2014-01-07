@@ -15,19 +15,19 @@ var sayings = [
     "you're soaking in it",
     "My Name Is Blayze Thunderstorm and i dont care about the band Papa roach"
 ];
-module.exports = function() {
+module.exports = function(bot) {
   setInterval(function() {
     var sayit = function() {
       var saynum = Math.floor(Math.random() * (sayings.length - 1) + 1);
       if (Math.floor(Math.random() * (100) + 1) <= 10) {
         console.log("saying something " + saynum);
-        //bot.say('#asti', sayings[saynum]);
+        bot.say('#asti-labs', sayings[saynum]);
         console.log("said " + sayings[saynum]);
       } else {
         console.log("not going to say anything right now.");
       }
     };
     return sayit();
-  }, 5000);
+  }, 10000);
 
 }
