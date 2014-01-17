@@ -4,7 +4,7 @@
   "author": "Gregg <gregg.thomason@asti-usa.com>",
   "description": "IRCBOT",
   "dependencies": {
-    "colors": "*",
+    "colors": "~0.6.2",
     "irc": "*",
     "commander": "~2.0.0"
   },
