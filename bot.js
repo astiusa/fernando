@@ -2,36 +2,35 @@ var irc = require('irc');
 var repl = require('repl');
 var opts = require('commander');
 
-opts.option('-c, --console').parse(process.argv);
+opts
+  .option('-c, --console', 'open a console for interactivity with the bot')
+  .option('-n, --name [name]', 'nickname')
+  .option('-h, --host [host]', 'IRC host to connect to')
+  .option('-j, --join <channels>', 'channel(s) to join on start')
+  .option('-o, --op <users>', 'users to give ops when they join')
+  .parse(process.argv);
 
-var bot = new irc.Client('irc.asti-usa.com', 'Fernando', {
-    port: 6667,
-    debug: false
-  });
+var nick = opts.name || 'FernandoBot';
+var irchost = opts.host || 'irc.asti-usa.com';
+var join = opts.join || ['#asti'];
 
-bot.addListener('motd', function () {
-  bot.send('oper', 'greggt', 'greggt');
+var bot = new irc.Client(irchost, nick, {
+  port:     6667,
+  debug:    false,
+  channels: join
 });
 
-// we got ops, now grant
-bot.addListener('raw', function (message) {
-  if (message.rawCommand === '381') {
-    bot.join('#asti', function () {
-      var d = new Date();
-      if (d.getHours() < 12) {
-        bot.say('#asti', "Good morning, meatbags.");
+// FIXME merge channel+users list
+if (opts.op) {
+  for (var oper in opts.op) {
+    bot.addListener('join' + opts.join, function (nick, message) {
+        if (nick === opts.op[oper]) {
+          bot.send('mode', opts.join, '+o', nick)
+        }
       }
-      bot.send('mode', '#asti', '+o', 'greggt');
-    });
+    )
   }
-});
-
-// this is crap
-bot.addListener('join#asti', function (nick, message) {
-  if (nick === 'greggt') {
-    bot.send('mode', '#asti', '+o', 'greggt');
-  }
-});
+}
 
 bot.addListener('error', function (message) {
   console.log(message);
@@ -39,41 +38,13 @@ bot.addListener('error', function (message) {
 
 // spawn a console if asked
 if (opts.console) {
-  var r = repl.start();
-  r.context.bot = bot;
+  var r = repl.start({
+    prompt:   'bot> ',
+    terminal: true
+  });
 }
 
-// say something dopey
-var sayings = [
-  'do you sell hubcaps for a 1972 pinto?',
-  'bring me a tangerine',
-  'Good morning, meatbags.',
-  'open GLITTER VALVE to maximum',
-  'Mi papa tiene 47 anos',
-  'butts butts butts #butts',
-  'HEADBANGER!',
-  'he dominates the DECADENT SUBWAY SCENE.',
-  'Science!',
-  'Pipe down, coppertop.',
-  "at what age is it okay to tell a highway that it's adopted?",
-  "you're soaking in it",
-  "My Name Is Blayze Thunderstorm and i dont care about the band Papa roach"
-];
-
-setInterval(function () {
-  var sayit = function () {
-    var saynum = Math.floor(Math.random() * (sayings.length - 1) + 1);
-    if (Math.floor(Math.random() * (100) + 1) <= 10) {
-      bot.say('#asti', sayings[saynum]);
-      // TODO: we should have a timeout when we say something to make sure we don't
-      // say something else for a while.    
-    }
-  };
-  return sayit();
-}, 5000);
-
-
 // listen for your name
-bot.addListener('pm', function(from, message){
+bot.addListener('pm', function (from, message) {
   console.log(from + ' => ME: ' + message);
 });
