@@ -3,6 +3,7 @@ var webserver = require('./lib');
 var irc = require('irc');
 var repl = require('repl');
 var opts = require('commander');
+var request = require('request');
 
 opts
 .option('-c, --console', 'open a console for interactivity with the bot')
@@ -61,5 +62,6 @@ bot.addListener('pm', function (from, message) {
 });
 
 bot.addListener('message', function (nick, channel, message) {
-  console.log('We have a message from ' + nick + ': '+ channel + " " + message);
+  request.post('http://localhost:4000/ping', {data: {nick: nick, message: message, channel: channel}});
+  //console.log('We have a message from ' + nick + ': '+ channel + " " + message);
 });
