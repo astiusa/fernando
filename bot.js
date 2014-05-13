@@ -1,6 +1,4 @@
 var webserver = require('./lib');
-webserver.init();
-webserver.start();
 
 var irc = require('irc');
 var repl = require('repl');
@@ -12,7 +10,17 @@ opts
 .option('-h, --host [host]', 'IRC host to connect to')
 .option('-j, --join <channels>', 'channel(s) to join on start')
 .option('-o, --op <users>', 'users to give ops when they join')
+.option('-p, --httpPort [port]', 'port for http server to'+
+        'listen on. Defaults to 4000')
 .parse(process.argv);
+
+if (!opts.httpPort) {
+  opts.httpPort = 4000;
+}
+webserver.init({
+  port: opts.httpPort
+});
+webserver.start();
 
 var nick = opts.name || 'FernandoBot';
 var irchost = opts.host || 'irc.asti-usa.com';
