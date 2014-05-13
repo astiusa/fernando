@@ -1,3 +1,7 @@
+var webserver = require('./lib');
+webserver.init();
+webserver.start();
+
 var irc = require('irc');
 var repl = require('repl');
 var opts = require('commander');
@@ -25,7 +29,7 @@ if (opts.op) {
   for (var oper in opts.op) {
     bot.addListener('join' + opts.join, function (nick, message) {
         if (nick === opts.op[oper]) {
-          bot.send('mode', opts.join, '+o', nick)
+          bot.send('mode', opts.join, '+o', nick);
         }
       }
     )

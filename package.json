@@ -5,8 +5,9 @@
   "description": "IRCBOT",
   "dependencies": {
     "colors": "~0.6.2",
-    "irc": "*",
-    "commander": "~2.0.0"
+    "commander": "~2.0.0",
+    "express": "^3.x.x",
+    "irc": "*"
   },
   "license": "",
   "engines": {
