@@ -1,3 +1,7 @@
+var webserver = require('./lib');
+webserver.init();
+webserver.start();
+
 var irc = require('irc');
 var repl = require('repl');
 var opts = require('commander');
