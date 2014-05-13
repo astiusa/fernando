@@ -1,58 +1,67 @@
+var webserver = require('./lib');
+
 var irc = require('irc');
 var repl = require('repl');
 var opts = require('commander');
-var say = require('./sayings');
+var request = require('request');
 
-opts.option('-c, --console').parse(process.argv);
+opts
+.option('-c, --console', 'open a console for interactivity with the bot')
+.option('-n, --name [name]', 'nickname')
+.option('-h, --host [host]', 'IRC host to connect to')
+.option('-j, --join <channels>', 'channel(s) to join on start')
+.option('-o, --op <users>', 'users to give ops when they join')
+.option('-p, --httpPort [port]', 'port for http server to'+
+        'listen on. Defaults to 4000')
+.parse(process.argv);
 
-var bot = new irc.Client('irc.labs.asti-usa.com', 'Fernando', {
-  port: 6667,
-  debug: false
+if (!opts.httpPort) {
+  opts.httpPort = 4000;
+}
+webserver.init({
+  port: opts.httpPort
+});
+webserver.start();
+
+var nick = opts.name || 'FernandoBot';
+var irchost = opts.host || 'irc.asti-usa.com';
+var join = [opts.join] || ['#asti'];
+
+var bot = new irc.Client(irchost, nick, {
+  port:     6667,
+  debug:    false,
+  channels: join
 });
 
-bot.addListener('motd', function(){
-  bot.send('oper', 'Fernando', 'roscoe123');
-});
-
-// we got ops, now grant
-bot.addListener('raw', function(message){
-  if (message.rawCommand === '381') {
-    bot.join('#asti-labs', function(){
-      say(bot);
-      var d = new Date();
-      if (d.getHours() < 12) {
-        bot.say('#asti-labs', "Good morning, meatbags.");
+// FIXME merge channel+users list
+if (opts.op) {
+  for (var oper in opts.op) {
+    bot.addListener('join' + join[0], function (nick, message) {
+      if (nick === opts.op[oper]) {
+        bot.send('mode', opts.join, '+o', nick);
       }
-      bot.send('mode', '#asti-labs', '+o', 'rossk');
     });
   }
-});
+}
 
-// this is crap
-bot.addListener('join#asti-labs', function(nick, message){
-  if (nick === 'Fernando') {
-    bot.send('mode', '#asti-labs', '+o', 'rossk');
-  }
-});
-
-bot.addListener('message#asti-labs', function(nick, text, message) {
-  console.log(text);
-  if (text === 'Dance, Fernando') {
-    bot.say('#asti-labs', '┗(-_-)┛┏(-_-)┓┗(-_-)┛');
-  }
-});
-
-bot.addListener('error', function(message){
+bot.addListener('error', function (message) {
   console.log(message);
 });
 
 // spawn a console if asked
 if (opts.console) {
-  var r = repl.start();
-  r.context.bot = bot;
+  var r = repl.start({
+    prompt:   'bot> ',
+    terminal: true
+  });
 }
 
 // listen for your name
-bot.addListener('pm', function(from, message){
+bot.addListener('pm', function (from, message) {
   console.log(from + ' => ME: ' + message);
+});
+
+bot.addListener('message', function (nick, channel, message) {
+  request.post('http://localhost:4000/ping', {data: {nick: nick, message: message, channel: channel}});
+  //console.log('We have a message from ' + nick + ': '+ channel + " " + message);
 });

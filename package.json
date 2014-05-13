@@ -1,27 +1,18 @@
 {
   "name": "ircbot",
   "version": "0.0.1",
-  "description": "The ASTi irc bot.",
-  "main": "bot.js",
-  "scripts": {
-    "start": "node bot.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/astiusa/fernando"
-  },
-  "keywords": [
-    "irc"
-  ],
-  "author": "J. Gregg Thomason",
-  "license": "Apache v2",
-  "bugs": {
-    "url": "https://github.com/astiusa/fernando/issues"
-  },
+  "author": "Gregg <gregg.thomason@asti-usa.com>",
+  "description": "IRCBOT",
   "dependencies": {
+    "colors": "~0.6.2",
     "commander": "~2.0.0",
-    "irc": "~0.3.6"
+    "express": "^3.x.x",
+    "irc": "*",
+    "request": "^2.34.0"
+  },
+  "license": "",
+  "engines": {
+    "node": ">=0.6"
   },
   "devDependencies": {
     "bower": "~1.3.3"
