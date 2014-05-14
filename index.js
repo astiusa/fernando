@@ -16,7 +16,7 @@ var nick = opts.name || 'FernandoBot';
 var irchost = opts.host || 'irc.asti-usa.com';
 var join = [opts.join] || ['#asti'];
 
-var ircbot = bot.bot(irchost, nick, join);
+var ircbot = bot.ircbot(irchost, nick, join);
 
 if (!opts.httpPort) {
   opts.httpPort = 4000;
