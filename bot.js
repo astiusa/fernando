@@ -23,9 +23,6 @@ webserver.init({
 });
 webserver.start();
 
-// all channels in a server
-// all users in a channel
-
 var nick = opts.name || 'FernandoBot';
 var irchost = opts.host || 'irc.asti-usa.com';
 var join = [opts.join] || ['#asti'];
@@ -36,12 +33,14 @@ var bot = new irc.Client(irchost, nick, {
   channels: join
 });
 
+// all channels in a server
 function onChannels(){
-  return opts.join;
+  return Object.keys(bot.chans);
 }
 
-function usersInChannel(channel){
-  return true;
+// all users in a channel
+function inChannel(channel){
+  return Object.keys(bot.chans[channel].users);
 }
 
 // FIXME merge channel+users list
