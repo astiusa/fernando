@@ -2,7 +2,7 @@
 
 var app = angular.module('FernandoBot', []);
 
-app.controller('fernandoController', ['$scope', function($scope) {
+app.controller('fernandoController', ['$scope', 'fernandoService', function($scope, fernandoService) {
     $scope.bot = {
         name: ''
     };
@@ -32,14 +32,18 @@ app.controller('fernandoController', ['$scope', function($scope) {
     $scope.givePermissions = function givePermissions(userName, permissions) {
         console.log('giving ', userName, 'permissions: ', permissions);
     };
+
+    fernandoService.getServers().then(function(servers) {
+        console.log('servers', servers);
+    });
 }])
 
     .factory('fernandoService', ['$http', '$q', function($http, $q) {
         function getServers() {
             var deferred = $q.defer();
 
-            $http.get('/api/servers').then(function(data, status) {
-                deferred.resolve(data.servers);
+            $http.get('/api/servers').then(function(received) {
+                deferred.resolve(received.data);
             }, function() {
                 deferred.reject();
             });
@@ -50,8 +54,8 @@ app.controller('fernandoController', ['$scope', function($scope) {
         function getServer(serverId) {
             var deferred = $q.defer();
 
-            $http.get('/api/servers/' + serverId).then(function(data, status) {
-                deferred.resolve(data);
+            $http.get('/api/servers/' + serverId).then(function(received) {
+                deferred.resolve(received.data);
             }, function() {
                 deferred.reject();
             });
@@ -62,8 +66,8 @@ app.controller('fernandoController', ['$scope', function($scope) {
         function getChannel(serverId, channelName) {
             var deferred = $q.defer();
 
-            $http.get('/api/servers/' + serverId + '/' + channelName).then(function(data, status) {
-                deferred.resolve(data);
+            $http.get('/api/servers/' + serverId + '/' + channelName).then(function(received) {
+                deferred.resolve(received.data);
             }, function() {
                 deferred.reject();
             });
