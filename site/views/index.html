@@ -1,3 +1,49 @@
+<!DOCTYPE html>
 <html>
-  <body>I AM A BANANA</body>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Fernando Control Panel</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+</head>
+<body data-ng-app="FernandoBot">
+<div class="container">
+    <div data-ng-controller="fernandoController">
+        <div class="row">
+            <button type="button" data-ng-click="startBot()">Start</button>
+            <button type="button" data-ng-click="endBot()">Stop</button>
+        </div>
+
+        <div class="row">
+            <input type="text" data-ng-model="data.channelToJoin">
+            <button type="button"
+                    data-ng-click="joinChannel(data.channelToJoin)"
+                    >Join
+            </button>
+        </div>
+        <div class="row">
+            <input type="text" data-ng-model="data.channelToLeave">
+            <button type="button"
+                    data-ng-click="leaveChannel(data.channelToLeave)">Leave
+            </button>
+        </div>
+
+        <div class="row">
+            <input type="text" data-ng-model="data.textToSay">
+            <button type="button" data-ng-click="say(data.textToSay)">Say
+            </button>
+        </div>
+
+        <div class="row">
+            <input type="text" data-ng-model="data.permissions">
+            <button type="button"
+                    data-ng-click="givePermissions(data.permissions)">Grant
+                Permissions
+            </button>
+        </div>
+    </div>
+</div>
+
+<script src="./js/angular.min.js"></script>
+<script src="./js/fernandoBotApp.js"></script>
+</body>
 </html>
