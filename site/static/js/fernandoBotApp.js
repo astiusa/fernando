@@ -32,4 +32,46 @@ app.controller('fernandoController', ['$scope', function($scope) {
     $scope.givePermissions = function givePermissions(userName, permissions) {
         console.log('giving ', userName, 'permissions: ', permissions);
     };
-}]);
+}])
+
+    .factory('fernandoService', ['$http', '$q', function($http, $q) {
+        function getServers() {
+            var deferred = $q.defer();
+
+            $http.get('/api/servers').then(function(data, status) {
+                deferred.resolve(data.servers);
+            }, function() {
+                deferred.reject();
+            });
+
+            return deferred.promise;
+        }
+
+        function getServer(serverId) {
+            var deferred = $q.defer();
+
+            $http.get('/api/servers/' + serverId).then(function(data, status) {
+                deferred.resolve(data);
+            }, function() {
+                deferred.reject();
+            });
+
+            return deferred.promise;
+        }
+
+        function getChannel(serverId, channelName) {
+            var deferred = $q.defer();
+
+            $http.get('/api/servers/' + serverId + '/' + channelName).then(function(data, status) {
+                deferred.resolve(data);
+            }, function() {
+                deferred.reject();
+            });
+
+            return deferred.promise;
+        }
+
+        return {
+            getServers: getServers
+        };
+    }]);
