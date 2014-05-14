@@ -37,11 +37,13 @@ var bot = new irc.Client(irchost, nick, {
 function onChannels(){
   return Object.keys(bot.chans);
 }
+exports.onChannels = onChannels;
 
 // all users in a channel
 function inChannel(channel){
   return Object.keys(bot.chans[channel].users);
 }
+exports.inChannel = inChannel;
 
 // FIXME merge channel+users list
 if (opts.op) {
@@ -73,5 +75,6 @@ bot.addListener('pm', function (from, message) {
 
 bot.addListener('message', function (nick, channel, message) {
   request.post('http://localhost:4000/ping', {data: {nick: nick, message: message, channel: channel}});
-  //console.log('We have a message from ' + nick + ': '+ channel + " " + message);
 });
+
+//
